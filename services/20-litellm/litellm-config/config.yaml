@@ -1,0 +1,20 @@
+# Guardrail-only config — models are managed via database (STORE_MODEL_IN_DB=True)
+# PII guardrail is per-request opt-in (default_on: false)
+# Clients activate by sending: guardrails: ["pii-mask", "pii-unmask"] in request metadata
+
+guardrails:
+  - guardrail_name: "pii-mask"
+    litellm_params:
+      guardrail: pii_guardrail.PiiGuardrail
+      mode: "pre_call"
+      default_on: false
+  - guardrail_name: "pii-unmask"
+    litellm_params:
+      guardrail: pii_guardrail.PiiGuardrail
+      mode: "post_call"
+      default_on: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  store_model_in_db: true

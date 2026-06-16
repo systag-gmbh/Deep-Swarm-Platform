@@ -1,0 +1,36 @@
+services:
+  litellm:
+    # image: ghcr.io/berriai/litellm:v1.81.12-stable
+    build: .
+    hostname: litellm
+    entrypoint: ["sh", "-c"]
+    command: ["pip install diskcache && litellm --config=/app/config/config.yaml"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${LITELLM_DB:-litellm}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      PROXY_BASE_URL: ${LITELLM_PROXY_BASE_URL:-https://localhost:8083}
+      STORE_MODEL_IN_DB: "True"
+      PRESIDIO_ANALYZER_API_BASE: "http://presidio-analyzer:5002"
+      ONNXRUNTIME_LOG_SEVERITY_LEVEL: "3"
+    volumes:
+      - ./litellm-config:/app/config:ro
+      - pii_cache:/tmp/pii_cache
+    networks:
+      - proxy
+      - database
+      - ai-internal
+    restart: unless-stopped
+
+volumes:
+  pii_cache:
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  database:
+    name: ${PROJECT_NAME}_database
+    external: true
+  ai-internal:
+    name: ${PROJECT_NAME}_ai-internal
+    external: true

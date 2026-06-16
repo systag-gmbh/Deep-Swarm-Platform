@@ -1,0 +1,191 @@
+# Multi-port HTTPS reverse proxy with caddy-security authentication
+# Copy to Caddyfile and customize
+# Access via: https://localhost:<port>
+
+{
+    # Global options
+    admin off
+    local_certs
+
+    # Order security directives
+    order authenticate before respond
+    order authorize before basicauth
+
+    # Security configuration
+    security {
+        # Local user database
+        local identity store localdb {
+            realm local
+            path /etc/caddy/users.json
+        }
+
+        # Authentication portal
+        authentication portal myportal {
+            crypto default token lifetime 86400
+            crypto key sign-verify {env.JWT_SHARED_KEY}
+            cookie domain localhost
+            cookie lifetime 86400
+            enable identity store localdb
+
+            ui {
+                links {
+                    "Deep Swarm Platform" "/" icon "las la-home"
+                    "My Identity" "/auth/whoami" icon "las la-user"
+                }
+            }
+
+            transform user {
+                match origin local
+                action add role authp/user
+            }
+        }
+
+        # Authorization policy for protected routes
+        authorization policy protected_policy {
+            set auth url https://localhost:443/auth
+            crypto key verify {env.JWT_SHARED_KEY}
+            allow roles authp/user authp/admin
+            inject headers with claims
+        }
+    }
+}
+
+# Port 443 - Landing Page (protected)
+https://localhost:443 {
+    route /auth* {
+        authenticate with myportal
+    }
+    route /* {
+        authorize with protected_policy
+        root * /srv/static
+        file_server
+    }
+    tls internal
+}
+
+# Port 8080 - n8n workflow automation
+# Exception: /webhook* paths accessible WITHOUT login
+https://localhost:8080 {
+    # Allow webhooks without authentication
+    @webhooks {
+        path /webhook*
+    }
+    route @webhooks {
+        reverse_proxy n8n:5678
+    }
+
+    # All other routes require authentication
+    route /* {
+        authorize with protected_policy
+        reverse_proxy n8n:5678
+    }
+    tls internal
+}
+
+# Port 8081 - Appsmith low-code platform (protected)
+https://localhost:8081 {
+    authorize with protected_policy
+    reverse_proxy appsmith:80
+    tls internal
+}
+
+# Port 8082 - pgAdmin database administration (protected)
+https://localhost:8082 {
+    authorize with protected_policy
+    reverse_proxy pgadmin:80
+    tls internal
+}
+
+# Port 8083 - LiteLLM AI gateway (protected)
+https://localhost:8083 {
+    authorize with protected_policy
+    reverse_proxy litellm:4000 {
+        header_down Location http:// https://
+    }
+    tls internal
+}
+
+# Port 8084 - Garage WebUI (Object Storage) (protected)
+https://localhost:8084 {
+    authorize with protected_policy
+    reverse_proxy garage-webui:3909
+    tls internal
+}
+
+# Port 8085 - Garage S3 API (Object Storage) - NO LOGIN REQUIRED
+# S3 API uses its own authentication (access keys)
+https://localhost:8085 {
+    reverse_proxy garage:3900
+    tls internal
+}
+
+# Port 8086 - Nextcloud file sync - NO LOGIN REQUIRED
+# Nextcloud uses its own authentication
+https://localhost:8086 {
+    reverse_proxy nextcloud:80
+    tls internal
+}
+
+# Port 8087 - RAGflow document AI (protected)
+https://localhost:8087 {
+    authorize with protected_policy
+    reverse_proxy ragflow:80
+    tls internal
+}
+
+# Port 8088 - Dozzle Docker log viewer (protected)
+https://localhost:8088 {
+    authorize with protected_policy
+    reverse_proxy dozzle:8080
+    tls internal
+}
+
+# Port 8089 - Skyvern AI browser automation (protected)
+https://localhost:8089 {
+    # All routes require authentication
+    authorize with protected_policy
+
+    # API and WebSocket routes (required for UI functionality)
+    @backend path /api/* /artifact/* /v1/*
+    handle @backend {
+        reverse_proxy skyvern:8000
+    }
+
+    # UI static files
+    handle {
+        reverse_proxy skyvern-ui:8080
+    }
+    tls internal
+}
+
+# Port 8090 - PII Analyzer (protected)
+https://localhost:8090 {
+    authorize with protected_policy
+
+    # API routes → presidio-analyzer
+    @api {
+        path /analyze /anonymize /deanonymize /health /supportedentities /recognizers /anonymize_conversation /cache_response
+    }
+    handle @api {
+        reverse_proxy presidio-analyzer:5002
+    }
+
+    # Frontend static files (SPA fallback)
+    handle {
+        root * /srv/pii-analyzer
+        try_files {path} /index.html
+        file_server
+    }
+    tls internal
+}
+
+# For public domains with Let's Encrypt (automatic HTTPS):
+# n8n.example.com {
+#     authorize with protected_policy
+#     reverse_proxy n8n:5678
+# }
+#
+# appsmith.example.com {
+#     authorize with protected_policy
+#     reverse_proxy appsmith:80
+# }

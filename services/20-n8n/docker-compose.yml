@@ -1,0 +1,40 @@
+services:
+  n8n:
+    # 2.25.7
+    image: n8nio/n8n@sha256:761374d4eb841b0a22771d6bd68f0e8d827b4979ae4e490045517b13fc1259dd
+    hostname: n8n
+    labels:
+      deepswarm.backup.stop: "true"
+    volumes:
+      - ${DATA_PATH}/n8n:/home/node/.n8n
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_DATABASE: ${N8N_DB:-n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-postgres}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: 0.0.0.0
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: https
+      NODE_ENV: production
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+      GENERIC_TIMEZONE: ${TZ:-Europe/Berlin}
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_COMMUNITY_PACKAGES_ENABLED: "false"
+    networks:
+      - proxy
+      - database
+      - ai-internal
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  database:
+    name: ${PROJECT_NAME}_database
+    external: true
+  ai-internal:
+    name: ${PROJECT_NAME}_ai-internal
+    external: true

@@ -1,0 +1,20 @@
+# Copy to overrides/90-caddy.override.yml and customize
+# Add the HTTPS ports you configured in your Caddyfile
+
+services:
+  caddy:
+    ports:
+      - "443:443"
+      - "8080:8080"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "8084:8084"
+      - "8085:8085"
+      - "8086:8086"
+      - "8087:8087"
+      - "8088:8088"
+      - "8089:8089"
+      - "8090:8090"
+    volumes:
+      - ${DATA_PATH}/presidio/frontend-dist:/srv/pii-analyzer:ro

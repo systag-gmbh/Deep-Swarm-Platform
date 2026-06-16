@@ -1,0 +1,30 @@
+# Garage Configuration
+# Copy to garage.toml
+# Secrets are set via GARAGE_RPC_SECRET and GARAGE_ADMIN_TOKEN env vars
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+
+rpc_bind_addr = "[::]:3902"
+rpc_public_addr = "garage:3902"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+# Optional: Enable for virtual-hosted bucket URLs (e.g., bucket.s3.example.com)
+# Not needed for path-style access (https://localhost:8085/bucket/object)
+root_domain = ""
+
+[s3_web]
+bind_addr = "[::]:3902"
+# Optional: Enable for static website hosting subdomains
+root_domain = ""
+
+[k2v_api]
+api_bind_addr = "[::]:3901"
+
+[admin]
+api_bind_addr = "[::]:3903"

@@ -1,0 +1,43 @@
+# Custom Presidio Analyzer with NerGuard-0.3B Transformer Model
+FROM python:3.13-slim
+
+ENV PIP_NO_CACHE_DIR=1
+ENV PORT=5002
+ENV WORKERS=1
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install \
+    presidio-analyzer \
+    transformers \
+    torch \
+    sentencepiece \
+    flask \
+    flask-cors \
+    gunicorn \
+    spacy \
+    diskcache
+
+# No pretrained spaCy model needed — NerGuard handles all NER.
+# Presidio uses spacy.blank("en") for tokenization only.
+
+# Copy application Python files
+COPY analyzer/ensemble_recognizer.py /app/ensemble_recognizer.py
+COPY analyzer/anonymize.py /app/anonymize.py
+COPY analyzer/conversation.py /app/conversation.py
+COPY analyzer/titles.py /app/titles.py
+COPY analyzer/startup.py /app/startup.py
+
+# Model cache directory
+ENV HF_HOME=/app/model-cache
+ENV TRANSFORMERS_CACHE=/app/model-cache
+
+EXPOSE 5002
+
+# Note: workers=1 recommended due to large model memory usage
+# Timeout=120 for slow model loading on first request
+CMD gunicorn --bind 0.0.0.0:${PORT} --workers ${WORKERS} --timeout 120 --timeout 120 --preload startup:app

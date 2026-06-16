@@ -1,0 +1,103 @@
+SYSTAG Deep Swarm Agent Platform
+Copyright 2025 SYSTAG
+
+This product includes software developed at SYSTAG.
+
+================================================================================
+Third-Party Software Components
+================================================================================
+
+This platform orchestrates and includes configurations for the following
+open-source software components, which are distributed as Docker images
+and retain their original licenses:
+
+1. Caddy Server
+   - License: Apache License 2.0
+   - Website: https://caddyserver.com/
+   - Copyright: (c) 2020 Matthew Holt and The Caddy Authors
+
+2. PostgreSQL with pgVector
+   - PostgreSQL License: PostgreSQL License (BSD-style)
+   - Website: https://www.postgresql.org/
+   - Copyright: (c) 1996-2025, The PostgreSQL Global Development Group
+
+   - pgVector License: PostgreSQL License
+   - Website: https://github.com/pgvector/pgvector
+   - Copyright: (c) 2021 Andrew Kane
+
+3. Appsmith
+   - License: Apache License 2.0 (Community Edition)
+   - Website: https://www.appsmith.com/
+   - Copyright: (c) 2020-2025 Appsmith, Inc.
+
+4. n8n
+   - License: Sustainable Use License (Fair-code)
+   - Website: https://n8n.io/
+   - Copyright: (c) 2019-2025 n8n GmbH
+
+5. pgAdmin
+   - License: PostgreSQL License
+   - Website: https://www.pgadmin.org/
+   - Copyright: (c) 2013-2025, The pgAdmin Development Team
+
+6. LiteLLM
+   - License: MIT License
+   - Website: https://github.com/BerriAI/litellm
+   - Copyright: (c) 2023 BerriAI
+
+7. Docker Compose
+   - License: Apache License 2.0
+   - Website: https://docs.docker.com/compose/
+   - Copyright: (c) 2013-2025 Docker, Inc.
+
+8. Resticker (Restic Docker wrapper)
+   - License: MIT License
+   - Website: https://github.com/djmaze/resticker
+   - Copyright: (c) 2017-2025 Martin Honermeyer
+
+   - Restic (bundled):
+     - License: BSD 2-Clause License
+     - Website: https://restic.net/
+     - Copyright: (c) 2014-2025 Alexander Neumann
+
+9. Garage
+   - License: AGPL-3.0
+   - Website: https://garagehq.deuxfleurs.fr/
+   - Copyright: (c) 2020-2025 Deuxfleurs Association
+
+10. Garage WebUI
+    - License: MIT License
+    - Website: https://github.com/khairul169/garage-webui
+    - Copyright: (c) 2023-2025 khairul169
+
+================================================================================
+Disclaimer
+================================================================================
+
+Each of the above-mentioned software components is subject to its own license
+terms and conditions. The SYSTAG platform provides orchestration, configuration,
+and management scripts that facilitate the deployment and integration of these
+components.
+
+Users must ensure compliance with the individual licenses of each component
+when deploying this platform. The inclusion of these components in the platform
+configuration does not alter their original licensing terms.
+
+For detailed license information about each component, please refer to the
+respective project's documentation and license files.
+
+================================================================================
+Additional Information
+================================================================================
+
+The SYSTAG platform itself (excluding third-party components) consists of:
+- Docker Compose configurations
+- Shell scripts for platform management
+- Caddy reverse proxy configurations
+- Environment configuration templates
+- Documentation and setup guides
+
+These platform-specific files are licensed under the Apache License 2.0
+as specified in the LICENSE file.
+
+For questions about licensing or commercial use, please contact SYSTAG.

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="swarmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#667eea"/>
+      <stop offset="100%" stop-color="#764ba2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Central hub node -->
+  <circle cx="50" cy="50" r="15.6" fill="url(#swarmGradient)"/>
+
+  <!-- Corner satellite nodes -->
+  <circle cx="18.75" cy="31.25" r="9.4" fill="url(#swarmGradient)" opacity="0.8"/>
+  <circle cx="81.25" cy="31.25" r="9.4" fill="url(#swarmGradient)" opacity="0.8"/>
+  <circle cx="18.75" cy="68.75" r="9.4" fill="url(#swarmGradient)" opacity="0.8"/>
+  <circle cx="81.25" cy="68.75" r="9.4" fill="url(#swarmGradient)" opacity="0.8"/>
+
+  <!-- Top and bottom satellite nodes -->
+  <circle cx="50" cy="12.5" r="7.8" fill="url(#swarmGradient)" opacity="0.6"/>
+  <circle cx="50" cy="87.5" r="7.8" fill="url(#swarmGradient)" opacity="0.6"/>
+</svg>

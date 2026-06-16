@@ -1,0 +1,29 @@
+services:
+  nextcloud:
+    image: nextcloud:stable
+    hostname: nextcloud
+    user: 1000:1000
+    labels:
+      deepswarm.backup.stop: "true"
+    volumes:
+      - ${DATA_PATH}/nextcloud:/var/www/html
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${NEXTCLOUD_DB:-nextcloud}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER:-admin}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_TRUSTED_DOMAINS:-localhost}
+    networks:
+      - proxy
+      - database
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  database:
+    name: ${PROJECT_NAME}_database
+    external: true

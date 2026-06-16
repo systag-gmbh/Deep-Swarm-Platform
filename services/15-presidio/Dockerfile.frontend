@@ -1,0 +1,11 @@
+# Multi-stage build: Node builds frontend, busybox copies dist to volume
+FROM node:lts AS build
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ .
+RUN npm run build
+
+FROM busybox:stable
+COPY --from=build /app/dist /dist
+CMD ["cp", "-r", "/dist/.", "/output/"]

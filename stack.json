@@ -1,0 +1,26 @@
+{
+  "project_name": "stack",
+  "data_path": "/docker/data",
+  "backup_path": "/docker",
+  "backup_output_path": "/backups",
+  "networks": {
+    "proxy": {},
+    "database": {},
+    "ai-internal": {}
+  },
+  "services": [
+    "00-resticker",
+    "10-postgres",
+    "11-garage",
+    "15-presidio",
+    "20-appsmith",
+    "20-dozzle",
+    "20-litellm",
+    "20-n8n",
+    "20-pgadmin",
+    "20-ragflow",
+    "20-nextcloud",
+    "20-skyvern",
+    "90-caddy"
+  ]
+}

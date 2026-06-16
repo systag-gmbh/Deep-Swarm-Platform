@@ -1,0 +1,24 @@
+services:
+  pgadmin:
+    image: dpage/pgadmin4:9.12
+    hostname: pgadmin
+    labels:
+      deepswarm.backup.stop: "true"
+    volumes:
+      - ${DATA_PATH}/pgadmin:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json:ro
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    networks:
+      - proxy
+      - database
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  database:
+    name: ${PROJECT_NAME}_database
+    external: true

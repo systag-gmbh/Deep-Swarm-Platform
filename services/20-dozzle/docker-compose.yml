@@ -1,0 +1,14 @@
+services:
+  dozzle:
+    image: amir20/dozzle:latest
+    hostname: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true

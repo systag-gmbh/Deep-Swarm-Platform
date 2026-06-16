@@ -1,0 +1,39 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.2.0
+    hostname: garage
+    labels:
+      deepswarm.backup.stop: "true"
+    volumes:
+      - ${DATA_PATH}/garage/data:/var/lib/garage/data
+      - ${DATA_PATH}/garage/meta:/var/lib/garage/meta
+      - ./garage.toml:/etc/garage.toml:ro
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
+    networks:
+      - proxy
+      - ai-internal
+    restart: unless-stopped
+
+  garage-webui:
+    image: khairul169/garage-webui:1.1.0
+    hostname: garage-webui
+    environment:
+      API_BASE_URL: http://garage:3903
+      API_ADMIN_KEY: ${GARAGE_ADMIN_TOKEN}
+      S3_ENDPOINT_URL: http://garage:3900
+      AUTH_USER_PASS: ${GARAGE_WEBUI_AUTH}
+    depends_on:
+      - garage
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  ai-internal:
+    name: ${PROJECT_NAME}_ai-internal
+    external: true

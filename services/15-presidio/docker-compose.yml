@@ -1,0 +1,79 @@
+services:
+  presidio-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    image: presidio-analyzer-nerguard:latest
+    hostname: presidio-analyzer
+    environment:
+      TRANSFORMERS_VERBOSITY: "error"
+      TOKENIZERS_PARALLELISM: "false"
+      USE_GPU: "false"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      HF_HOME: /app/model-cache
+      TRANSFORMERS_CACHE: /app/model-cache
+      GLINER_URL: "http://gliner:5003"
+      PORT: "5002"
+      SCORE_THRESHOLD: "${PRESIDIO_SCORE_THRESHOLD:-0.5}"
+      EXCLUDED_ENTITIES: "${PRESIDIO_EXCLUDED_ENTITIES:-DATE_TIME,AGE,GENDER}"
+      AUDIT_LOGGING: "${PRESIDIO_AUDIT_LOGGING:-false}"
+    volumes:
+      - ${DATA_PATH}/presidio/model-cache:/app/model-cache
+      - pii_cache:/tmp/pii_cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    depends_on:
+      gliner:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - proxy
+      - ai-internal
+    restart: unless-stopped
+
+  gliner:
+    build:
+      context: .
+      dockerfile: Dockerfile.gliner
+    image: gliner-server:latest
+    hostname: gliner
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    networks:
+      - ai-internal
+    restart: unless-stopped
+
+  pii-analyzer-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: pii-analyzer-frontend:latest
+    volumes:
+      - ${DATA_PATH}/presidio/frontend-dist:/output
+    restart: "no"
+
+volumes:
+  pii_cache:
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  ai-internal:
+    name: ${PROJECT_NAME}_ai-internal
+    external: true

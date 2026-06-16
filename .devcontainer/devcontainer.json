@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+  "name": "deep-swarm-platform",
+  "image": "registry.systag.cloud/systag/devcontainers/dotnet:10.0-main",
+  "initializeCommand": "docker pull registry.systag.cloud/systag/devcontainers/dotnet:10.0-main",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/deep-swarm-platform,type=bind",
+  "workspaceFolder": "/workspaces/deep-swarm-platform",
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [4300],
+  // "portsAttributes": {
+  //    "4300": {
+  //      "protocol": "https"
+  //    }
+  // },
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "dotnet restore tests/UnitTests/UnitTests.csproj",
+  "postCreateCommand": {
+    "fixVolumePerms": "sudo chown -R $(whoami): /home/vscode/.claude",
+    "copyStatusLineSettings": "mkdir -p /home/vscode/.config/ccstatusline && cp ${containerWorkspaceFolder}/.claude/ccstatusline.json /home/vscode/.config/ccstatusline/settings.json"
+  },
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+  "mounts": [
+    "source=claude-code-config,target=/home/vscode/.claude,type=volume"
+  ],
+  "containerEnv": {
+    // Set environment variables for the container.
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "true",
+    "DOTNET_NOLOGO": "true",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "true",
+    "DOTNET_USE_POLLING_FILE_WATCHER": "true",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
+  }
+}

@@ -1,0 +1,33 @@
+# User configuration
+stack.local.json
+landing.yaml
+.env
+
+# User overrides
+overrides/*.yml
+overrides/*.yaml
+!overrides/.gitkeep
+!overrides/*.example
+
+# User service configs
+services/20-litellm/config.yaml
+services/90-caddy/Caddyfile
+services/90-caddy/static/index.html
+services/90-caddy/users.json
+
+# Data directory
+/data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Worktrees
+.worktrees/
+
+# .NET
+bin/
+obj/
+src.sln

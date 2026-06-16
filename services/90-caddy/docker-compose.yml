@@ -1,0 +1,27 @@
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: caddy-security:local
+    hostname: caddy
+    labels:
+      deepswarm.backup.stop: "true"
+    ports:
+      - "443:443"
+    volumes:
+      - ${DATA_PATH}/caddy/data:/data
+      - ${DATA_PATH}/caddy/config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./static:/srv/static:ro
+      - ./users.json:/etc/caddy/users.json
+    environment:
+      - JWT_SHARED_KEY=${CADDY_JWT_SHARED_KEY}
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true

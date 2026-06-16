@@ -1,0 +1,20 @@
+services:
+  appsmith:
+    image: appsmith/appsmith-ce:v1.96
+    hostname: appsmith
+    labels:
+      deepswarm.backup.stop: "true"
+    volumes:
+      - ${DATA_PATH}/appsmith:/appsmith-stacks
+    networks:
+      - proxy
+      - database
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: ${PROJECT_NAME}_proxy
+    external: true
+  database:
+    name: ${PROJECT_NAME}_database
+    external: true

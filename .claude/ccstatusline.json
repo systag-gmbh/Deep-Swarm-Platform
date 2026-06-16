@@ -1,0 +1,114 @@
+{
+    "version": 3,
+    "lines": [
+        [
+            {
+                "id": "1",
+                "type": "model",
+                "color": "cyan"
+            },
+            {
+                "id": "2",
+                "type": "separator"
+            },
+            {
+                "id": "3",
+                "type": "context-length",
+                "color": "brightBlack"
+            },
+            {
+                "id": "4",
+                "type": "separator"
+            },
+            {
+                "id": "5",
+                "type": "git-branch",
+                "color": "magenta"
+            },
+            {
+                "id": "6",
+                "type": "separator"
+            },
+            {
+                "id": "7",
+                "type": "git-changes",
+                "color": "brightGreen"
+            }
+        ],
+        [
+            {
+                "id": "8cd847a6-70c1-4b77-b5aa-6e939d176e8a",
+                "type": "tokens-input"
+            },
+            {
+                "id": "87a2050d-3ca1-40da-a91f-28e3791b8f08",
+                "type": "separator"
+            },
+            {
+                "id": "b0243c34-c4d7-4baf-ab28-d81b6712eaec",
+                "type": "tokens-output"
+            },
+            {
+                "id": "a1030978-83dd-4745-9a0c-90da482828bb",
+                "type": "separator"
+            },
+            {
+                "id": "14a561e2-b8e9-4508-9786-b7858698dbb8",
+                "type": "tokens-cached"
+            },
+            {
+                "id": "4d6bd29c-4f0c-453b-a671-7a3523e7f953",
+                "type": "separator"
+            },
+            {
+                "id": "171e6a9e-38ce-466e-a9f9-5ece4a19b4ab",
+                "type": "tokens-total"
+            },
+            {
+                "id": "67629453-4a46-4893-b98b-ddcb26bdb9de",
+                "type": "separator"
+            },
+            {
+                "id": "a84befde-13e3-422d-890b-7a0ccfae720b",
+                "type": "session-cost"
+            }
+        ],
+        [
+            {
+                "id": "c7bf139b-e0e1-43b9-bd36-bf908f80663a",
+                "type": "block-timer"
+            },
+            {
+                "id": "0ad8ca6e-be4f-4e06-b81e-554ab9cb20c2",
+                "type": "separator"
+            },
+            {
+                "id": "566b47c0-131a-4794-8e6b-083e094a2bd8",
+                "type": "session-clock"
+            }
+        ],
+        [
+            {
+                "id": "a5c9c74b-db49-47bf-9a02-e96ce1194374",
+                "type": "current-working-dir"
+            }
+        ]
+    ],
+    "flexMode": "full-minus-40",
+    "compactThreshold": 80,
+    "colorLevel": 2,
+    "inheritSeparatorColors": false,
+    "globalBold": false,
+    "powerline": {
+        "enabled": false,
+        "separators": [
+            ""
+        ],
+        "separatorInvertBackground": [
+            false
+        ],
+        "startCaps": [],
+        "endCaps": [],
+        "autoAlign": false
+    }
+}

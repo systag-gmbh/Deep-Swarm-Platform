@@ -1,0 +1,59 @@
+services:
+  resticker:
+    image: mazzolino/restic:1
+    hostname: resticker
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Europe/Berlin}
+      RUN_ON_STARTUP: "false"
+      BACKUP_CRON: ${BACKUP_CRON:-0 0 3 * * *}
+      RESTIC_REPOSITORY: /backup
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_BACKUP_SOURCES: /data
+      RESTIC_BACKUP_ARGS: >-
+        --tag ${PROJECT_NAME:-stack}
+        --verbose
+      RESTIC_FORGET_ARGS: >-
+        --keep-last 10
+        --keep-daily 7
+        --keep-weekly 5
+        --keep-monthly 12
+      PRE_COMMANDS: docker stop $$(docker ps -q --filter "label=deepswarm.backup.stop=true")
+      POST_COMMANDS_EXIT: docker start $$(docker ps -a -q --filter "label=deepswarm.backup.stop=true")
+    volumes:
+      - ${BACKUP_PATH}:/data:ro
+      - ${DATA_PATH}/resticker/cache:/cache
+      - ${BACKUP_OUTPUT_PATH}:/backup
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  resticker-prune:
+    image: mazzolino/restic:1
+    hostname: resticker
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Europe/Berlin}
+      SKIP_INIT: "true"
+      RUN_ON_STARTUP: "false"
+      PRUNE_CRON: ${PRUNE_CRON:-0 0 4 * * *}
+      RESTIC_REPOSITORY: /backup
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+    volumes:
+      - ${DATA_PATH}/resticker/cache:/cache
+      - ${BACKUP_OUTPUT_PATH}:/backup
+
+  resticker-check:
+    image: mazzolino/restic:1
+    hostname: resticker
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-Europe/Berlin}
+      SKIP_INIT: "true"
+      RUN_ON_STARTUP: "false"
+      CHECK_CRON: ${CHECK_CRON:-0 0 5 * * *}
+      RESTIC_REPOSITORY: /backup
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_CHECK_ARGS: >-
+        --read-data-subset=2%
+    volumes:
+      - ${DATA_PATH}/resticker/cache:/cache
+      - ${BACKUP_OUTPUT_PATH}:/backup
