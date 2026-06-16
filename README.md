@@ -8,7 +8,7 @@ A modular Docker Compose stack managed by .NET 10 file-based scripts.
 
 ```bash
 # Clone GIT Repository
-# git clone ... directory
+git clone https://github.com/systag-gmbh/Deep-Swarm-Platform.git
 
 # Navigate to root folder of project
 cd directory
