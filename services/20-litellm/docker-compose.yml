@@ -4,7 +4,7 @@ services:
     build: .
     hostname: litellm
     entrypoint: ["sh", "-c"]
-    command: ["pip install diskcache && litellm --config=/app/config/config.yaml"]
+    command: ["litellm --config=/app/config/config.yaml"]
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${LITELLM_DB:-litellm}
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}

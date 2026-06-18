@@ -1,6 +1,13 @@
 # v1.84.9
 FROM ghcr.io/berriai/litellm@sha256:4147ee552189110d1c4c8f90e51ed98b69d222bd0ef9ca364c8f75e2865d2eb3
 
+# litellm v1.89 ships a uv-managed venv at /app/.venv with no pip/uv on PATH.
+# Bring in uv from its official image to manage packages.
+COPY --from=ghcr.io/astral-sh/uv:0.11.21 /uv /uvx /bin/
+
+# Pre-install diskcache so it's baked into the image (no PyPI needed at runtime)
+RUN uv pip install --python /app/.venv/bin/python3 --no-cache diskcache
+
 # Patch for https://github.com/BerriAI/litellm/issues/21891
 # TypeError: 'NoneType' object is not a mapping when extra_body is None
 COPY patch_extra_body.py /tmp/patch_extra_body.py
