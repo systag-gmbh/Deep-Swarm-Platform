@@ -1,7 +1,8 @@
 services:
   n8n:
-    # 2.25.7
-    image: n8nio/n8n@sha256:761374d4eb841b0a22771d6bd68f0e8d827b4979ae4e490045517b13fc1259dd
+    # https://hub.docker.com/r/n8nio/n8n/tags?name=stable
+    # 2.27.4
+    image: n8nio/n8n@sha256:cf11c96b0d0089bb24459bf97b445fd7008f41543b673cce4d955f7c0ed8752d
     hostname: n8n
     labels:
       deepswarm.backup.stop: "true"
